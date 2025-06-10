@@ -19,6 +19,7 @@ public class service: Iservice
     public async Task<bookListResponse> ListBooks(CancellationToken cancellationToken)
     {
         bookListResponse response = new bookListResponse();
+        List<allInfoBookDTO> allInfoBooks = new List<allInfoBookDTO>();
         var data = _context.Books.ToList();
         foreach (var book in data)
         {
@@ -28,8 +29,27 @@ public class service: Iservice
             alldto.ReleaseDate = book.ReleaseDate;
             var publishingHouseDTO = _context.PublishingHouses.Where(house => house.IdPublishingHouse == book.IdPublishingHouse).FirstOrDefault();
             alldto.NamePublishingHouse = publishingHouseDTO.Name;
-            
+            alldto.Country = publishingHouseDTO.Country;
+            alldto.City = publishingHouseDTO.City;
+            List<string> genres = new List<string>();
+            List<string> authors = new List<string>();
+            var bookgenres = _context.BookGenres.Where(genre => genre.IdBook == book.IdBook).ToList();
+            foreach (var bookgenre in bookgenres)
+            {
+                var genre = _context.Genres.Where(genre => genre.IdGenre == bookgenre.IdGenre).FirstOrDefault();
+                genres.Add(genre.Name);
+            }
+            alldto.Genres = genres;
+            var authorBooks = _context.BookAuthors.Where(author => author.IdBook == book.IdBook).ToList();
+            foreach (var authorBook in authorBooks)
+            {
+                var author = _context.Users.Where(a => a.IdAuthor == authorBook.IdAuthor).FirstOrDefault();
+                authors.Add(author.FirstName + " " + author.LastName);
+            }
+            alldto.Authors = authors;
+            allInfoBooks.Add(alldto);
         }
+        response.allInfoBooks = allInfoBooks;
         return response;
     }
 
