@@ -55,6 +55,52 @@ public class service: Iservice
 
     public async Task<Boolean> AddBook(BookToAdd book, CancellationToken cancellationToken)
     {
+        try
+        {
+            var publishingHouse = _context.PublishingHouses
+                .Where(house => house.IdPublishingHouse == book.IdPublishingHouse).FirstOrDefault();
+            if (publishingHouse == null)
+            {
+                PublishingHouse p = new PublishingHouse();
+                p.IdPublishingHouse = book.IdPublishingHouse;
+                p.Name = book.NamePublishingHouse;
+                p.Country = book.Country;
+                p.City = book.City;
+                _context.PublishingHouses.Add(p);
+            }
+        }
+        catch (Exception e)
+        {
+            try
+            {
+                PublishingHouse p = new PublishingHouse();
+                p.IdPublishingHouse = book.IdPublishingHouse;
+                p.Name = book.NamePublishingHouse;
+                p.Country = book.Country;
+                p.City = book.City;
+                _context.PublishingHouses.Add(p);
+            }
+            catch (Exception exception)
+            {
+                
+            }
+        }
+        Book newBook = new Book();
+        newBook.IdBook = book.IdBook;
+        newBook.Name = book.NameBook;
+        newBook.ReleaseDate = book.ReleaseDate;
+        newBook.IdPublishingHouse = book.IdPublishingHouse;
+        _context.Books.Add(newBook);
+        foreach (var author in book.IdAuthors)
+        {
+            _context.BookAuthors.Add(new BookAuthor { IdAuthor = author, IdBook = newBook.IdBook });
+        }
+
+        foreach (var genre in book.IdGenres)
+        {
+            _context.BookGenres.Add(new BookGenre { IdGenre = genre, IdBook = newBook.IdBook });
+        }
+        _context.SaveChanges();
         return true;
     }
     
