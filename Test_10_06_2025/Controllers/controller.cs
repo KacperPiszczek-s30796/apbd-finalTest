@@ -15,7 +15,7 @@ public class controller: ControllerBase
         this.service = service;
     }
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery]bool filterByReleaseDate, CancellationToken token = default)
+    public async Task<IActionResult> Get([FromQuery]bool? filterByReleaseDate, CancellationToken token = default)
     {
         bookListResponse response = service.ListBooks(filterByReleaseDate ,token).Result;
         return Ok(response);

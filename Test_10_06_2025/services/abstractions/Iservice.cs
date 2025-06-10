@@ -5,6 +5,6 @@ namespace Test_10_06_2025.services.abstractions;
 
 public interface Iservice
 {
-    public Task<bookListResponse> ListBooks(bool filter,CancellationToken cancellationToken);
+    public Task<bookListResponse> ListBooks(bool? filter,CancellationToken cancellationToken);
     public Task<Boolean> AddBook(BookToAdd book, CancellationToken cancellationToken);
 }

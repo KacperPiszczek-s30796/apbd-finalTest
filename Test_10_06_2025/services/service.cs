@@ -17,12 +17,12 @@ public class service: Iservice
         _context = context;
     }
 
-    public async Task<bookListResponse> ListBooks(bool filter,CancellationToken cancellationToken)
+    public async Task<bookListResponse> ListBooks(bool? filter,CancellationToken cancellationToken)
     {
         bookListResponse response = new bookListResponse();
         List<allInfoBookDTO> allInfoBooks = new List<allInfoBookDTO>();
         List<Book> data;
-        if (filter)
+        if (filter != null && filter == true)
         {
             data = _context.Books.OrderBy(book => book.ReleaseDate).ToListAsync(cancellationToken).Result;
         }
