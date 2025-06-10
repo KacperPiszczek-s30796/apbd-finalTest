@@ -17,14 +17,14 @@ public class controller: ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery]bool? filterByReleaseDate, CancellationToken token = default)
     {
-        bookListResponse response = service.ListBooks(filterByReleaseDate ,token).Result;
+        bookListResponse response = await service.ListBooks(filterByReleaseDate ,token);
         return Ok(response);
     }
 
     [HttpPost]
     public async Task<IActionResult> AddBook([FromBody]BookToAdd book, CancellationToken cancellationToken)
     {
-        if (service.AddBook(book, cancellationToken).Result)
+        if (await service.AddBook(book, cancellationToken))
         {
             return Ok("Book added");
         }

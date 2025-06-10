@@ -36,23 +36,23 @@ public class service: Iservice
             alldto.IdBook = book.IdBook;
             alldto.NameBook = book.Name;
             alldto.ReleaseDate = book.ReleaseDate;
-            var publishingHouseDTO = _context.PublishingHouses.Where(house => house.IdPublishingHouse == book.IdPublishingHouse).FirstOrDefaultAsync(cancellationToken).Result;
+            var publishingHouseDTO = await _context.PublishingHouses.Where(house => house.IdPublishingHouse == book.IdPublishingHouse).FirstOrDefaultAsync(cancellationToken);
             alldto.NamePublishingHouse = publishingHouseDTO.Name;
             alldto.Country = publishingHouseDTO.Country;
             alldto.City = publishingHouseDTO.City;
             List<string> genres = new List<string>();
             List<string> authors = new List<string>();
-            var bookgenres = _context.BookGenres.Where(genre => genre.IdBook == book.IdBook).ToListAsync(cancellationToken).Result;
+            var bookgenres =await _context.BookGenres.Where(genre => genre.IdBook == book.IdBook).ToListAsync(cancellationToken);
             foreach (var bookgenre in bookgenres)
             {
-                var genre = _context.Genres.Where(genre => genre.IdGenre == bookgenre.IdGenre).FirstOrDefaultAsync(cancellationToken).Result;
+                var genre =await _context.Genres.Where(genre => genre.IdGenre == bookgenre.IdGenre).FirstOrDefaultAsync(cancellationToken);
                 genres.Add(genre.Name);
             }
             alldto.Genres = genres;
-            var authorBooks = _context.BookAuthors.Where(author => author.IdBook == book.IdBook).ToListAsync(cancellationToken).Result;
+            var authorBooks =await _context.BookAuthors.Where(author => author.IdBook == book.IdBook).ToListAsync(cancellationToken);
             foreach (var authorBook in authorBooks)
             {
-                var author = _context.Users.Where(a => a.IdAuthor == authorBook.IdAuthor).FirstOrDefaultAsync(cancellationToken).Result;
+                var author =await _context.Users.Where(a => a.IdAuthor == authorBook.IdAuthor).FirstOrDefaultAsync(cancellationToken);
                 authors.Add(author.FirstName + " " + author.LastName);
             }
             alldto.Authors = authors;
