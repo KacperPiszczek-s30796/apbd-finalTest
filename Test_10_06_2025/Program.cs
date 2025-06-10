@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Test_10_06_2025.DAL;
 using Test_10_06_2025.middleware;
 using Test_10_06_2025.services.extentions;
 
@@ -12,9 +14,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddProblemDetails();
 builder.Services.AddInfrastructureServices();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-//builder.Services.AddDbContext<DbContext1>(options =>
-//    options.UseSqlServer(
-//        "Server=localhost\\SQLEXPRESS;Database=APBD_10_06_2025;Trusted_Connection=True;Encrypt=True;TrustServerCertificate=True;"));
+builder.Services.AddDbContext<DbContext1>(options =>
+    options.UseSqlServer(
+        "Server=localhost\\SQLEXPRESS;Database=APBD_10_06_2025;Trusted_Connection=True;Encrypt=True;TrustServerCertificate=True;"));
 
 var app = builder.Build();
 
