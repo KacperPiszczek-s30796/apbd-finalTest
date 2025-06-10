@@ -1,4 +1,5 @@
-﻿using Test_10_06_2025.contracts;
+﻿using Microsoft.EntityFrameworkCore;
+using Test_10_06_2025.contracts;
 using Test_10_06_2025.contracts.requests;
 using Test_10_06_2025.contracts.responses;
 using Test_10_06_2025.DAL;
@@ -23,11 +24,11 @@ public class service: Iservice
         List<Book> data;
         if (filter)
         {
-            data = _context.Books.OrderBy(book => book.ReleaseDate).ToList();
+            data = _context.Books.OrderBy(book => book.ReleaseDate).ToListAsync(cancellationToken).Result;
         }
         else
         {
-            data = _context.Books.ToList();
+            data = _context.Books.ToListAsync(cancellationToken).Result;
         }
         foreach (var book in data)
         {
@@ -35,23 +36,23 @@ public class service: Iservice
             alldto.IdBook = book.IdBook;
             alldto.NameBook = book.Name;
             alldto.ReleaseDate = book.ReleaseDate;
-            var publishingHouseDTO = _context.PublishingHouses.Where(house => house.IdPublishingHouse == book.IdPublishingHouse).FirstOrDefault();
+            var publishingHouseDTO = _context.PublishingHouses.Where(house => house.IdPublishingHouse == book.IdPublishingHouse).FirstOrDefaultAsync(cancellationToken).Result;
             alldto.NamePublishingHouse = publishingHouseDTO.Name;
             alldto.Country = publishingHouseDTO.Country;
             alldto.City = publishingHouseDTO.City;
             List<string> genres = new List<string>();
             List<string> authors = new List<string>();
-            var bookgenres = _context.BookGenres.Where(genre => genre.IdBook == book.IdBook).ToList();
+            var bookgenres = _context.BookGenres.Where(genre => genre.IdBook == book.IdBook).ToListAsync(cancellationToken).Result;
             foreach (var bookgenre in bookgenres)
             {
-                var genre = _context.Genres.Where(genre => genre.IdGenre == bookgenre.IdGenre).FirstOrDefault();
+                var genre = _context.Genres.Where(genre => genre.IdGenre == bookgenre.IdGenre).FirstOrDefaultAsync(cancellationToken).Result;
                 genres.Add(genre.Name);
             }
             alldto.Genres = genres;
-            var authorBooks = _context.BookAuthors.Where(author => author.IdBook == book.IdBook).ToList();
+            var authorBooks = _context.BookAuthors.Where(author => author.IdBook == book.IdBook).ToListAsync(cancellationToken).Result;
             foreach (var authorBook in authorBooks)
             {
-                var author = _context.Users.Where(a => a.IdAuthor == authorBook.IdAuthor).FirstOrDefault();
+                var author = _context.Users.Where(a => a.IdAuthor == authorBook.IdAuthor).FirstOrDefaultAsync(cancellationToken).Result;
                 authors.Add(author.FirstName + " " + author.LastName);
             }
             alldto.Authors = authors;
@@ -66,7 +67,7 @@ public class service: Iservice
         try
         {
             var publishingHouse = _context.PublishingHouses
-                .Where(house => house.IdPublishingHouse == book.IdPublishingHouse).FirstOrDefault();
+                .Where(house => house.IdPublishingHouse == book.IdPublishingHouse).FirstOrDefaultAsync(cancellationToken).Result;
             if (publishingHouse == null)
             {
                 PublishingHouse p = new PublishingHouse();
@@ -108,7 +109,7 @@ public class service: Iservice
         {
             _context.BookGenres.Add(new BookGenre { IdGenre = genre, IdBook = newBook.IdBook });
         }
-        _context.SaveChanges();
+        await _context.SaveChangesAsync(cancellationToken);
         return true;
     }
     
