@@ -15,14 +15,14 @@ public class controller: ControllerBase
         this.service = service;
     }
     [HttpGet]
-    public async Task<IActionResult> Get( CancellationToken token = default)
+    public async Task<IActionResult> Get([FromQuery]bool filterByReleaseDate, CancellationToken token = default)
     {
-        bookListResponse response = service.ListBooks(token).Result;
+        bookListResponse response = service.ListBooks(filterByReleaseDate ,token).Result;
         return Ok(response);
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddBook(BookToAdd book, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddBook([FromBody]BookToAdd book, CancellationToken cancellationToken)
     {
         if (service.AddBook(book, cancellationToken).Result)
         {

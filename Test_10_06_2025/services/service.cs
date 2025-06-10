@@ -16,11 +16,19 @@ public class service: Iservice
         _context = context;
     }
 
-    public async Task<bookListResponse> ListBooks(CancellationToken cancellationToken)
+    public async Task<bookListResponse> ListBooks(bool filter,CancellationToken cancellationToken)
     {
         bookListResponse response = new bookListResponse();
         List<allInfoBookDTO> allInfoBooks = new List<allInfoBookDTO>();
-        var data = _context.Books.ToList();
+        List<Book> data;
+        if (filter)
+        {
+            data = _context.Books.OrderBy(book => book.ReleaseDate).ToList();
+        }
+        else
+        {
+            data = _context.Books.ToList();
+        }
         foreach (var book in data)
         {
             allInfoBookDTO alldto = new allInfoBookDTO();
