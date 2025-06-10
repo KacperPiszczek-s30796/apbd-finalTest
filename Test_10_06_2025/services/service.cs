@@ -109,7 +109,16 @@ public class service: Iservice
         {
             _context.BookGenres.Add(new BookGenre { IdGenre = genre, IdBook = newBook.IdBook });
         }
-        await _context.SaveChangesAsync(cancellationToken);
+
+        try
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+
         return true;
     }
     

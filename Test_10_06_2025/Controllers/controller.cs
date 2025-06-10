@@ -26,7 +26,7 @@ public class controller: ControllerBase
     {
         if (service.AddBook(book, cancellationToken).Result)
         {
-            return Ok();
+            return Ok("Book added");
         }
         else
         {
